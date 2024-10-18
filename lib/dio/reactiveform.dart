@@ -55,7 +55,6 @@ class ReactiveTimePickerField extends StatelessWidget {
     required this.formControlName,
     required this.hintText,
   });
-
   @override
   Widget build(BuildContext context) {
     return ReactiveFormField<DateTime, DateTime>(

@@ -12,6 +12,13 @@ class DioScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => DioCubit(service: Services())..get(),
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            await context.read<DioCubit>().service.getData();
+            await context.read<DioCubit>().addOffline();
+          },
+          child: const Icon(Icons.save),
+        ),
         appBar: AppBar(title: const Text('Data List')),
         body: BlocBuilder<DioCubit, DioState>(
           builder: (context, state) {
@@ -26,10 +33,7 @@ class DioScreen extends StatelessWidget {
                 onNotification: (ScrollNotification scrollInfo) {
                   if (scrollInfo.metrics.pixels ==
                           scrollInfo.metrics.maxScrollExtent &&
-                      !state.loading) {
-                    // Trigger loading more data when scrolled to the bottom
-                    context.read<DioCubit>().getMoreData();
-                  }
+                      !state.loading) {}
                   return false;
                 },
                 child: ListView.builder(
@@ -38,12 +42,12 @@ class DioScreen extends StatelessWidget {
                     if (index == state.list.length) {
                       return const Center(
                         child: CircularProgressIndicator(),
-                      ); // Show a loading indicator at the bottom while fetching more data
+                      );
                     } else {
                       final item = state.list[index];
                       return ListTile(
-                        title: Text(item.title ?? ''),
-                        subtitle: Text('Completed: ${item.completed}'),
+                        title: Text(item['title'] ?? 'No Title'),
+                        subtitle: Text('ID: ${item['id']}'),
                       );
                     }
                   },
